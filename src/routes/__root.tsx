@@ -7,6 +7,10 @@ import {
   HeadContent,
   Scripts,
 } from '@tanstack/react-router'
+import { HeroUIProvider } from "@heroui/react";
+import {useRouter} from '@tanstack/react-router';
+
+import appCss from '../styles/app.css?url'
 
 export const Route = createRootRoute({
   head: () => ({
@@ -22,14 +26,22 @@ export const Route = createRootRoute({
         title: 'TanStack Start Starter',
       },
     ],
+    links: [{ rel: 'stylesheet', href: appCss }],
   }),
   component: RootComponent,
 })
 
+
 function RootComponent() {
+  let router = useRouter();
   return (
     <RootDocument>
-      <Outlet />
+      <HeroUIProvider
+       navigate={(to, options) => router.navigate({to, ...(options || {})})}
+       useHref={(to) => router.buildLocation({to}).href}
+      >
+        <Outlet />
+      </HeroUIProvider>
     </RootDocument>
   )
 }
@@ -41,6 +53,9 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
         <HeadContent />
       </head>
       <body>
+        <h1 className="text-3xl font-bold underline">
+          Hello world!
+        </h1>
         {children}
         <Scripts />
       </body>

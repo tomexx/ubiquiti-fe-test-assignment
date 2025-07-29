@@ -1,7 +1,14 @@
-// src/routes/index.tsx
 import * as fs from 'node:fs'
 import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
+import {
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+  Button,
+  Link,
+} from "@heroui/react";
 
 const filePath = 'count.txt'
 
@@ -34,6 +41,7 @@ function Home() {
   const state = Route.useLoaderData()
 
   return (
+    <>
     <button
       type="button"
       onClick={() => {
@@ -44,5 +52,20 @@ function Home() {
     >
       Add 1 to {state}?
     </button>
+    <Button>Press me</Button>
+    <Dropdown>
+        <DropdownTrigger>
+          <Button>Open</Button>
+        </DropdownTrigger>
+        <DropdownMenu aria-label="Navigation">
+          <DropdownItem key="home" href="/home">
+            Home
+          </DropdownItem>
+          <DropdownItem key="about" href="/about">
+            About
+          </DropdownItem>
+        </DropdownMenu>
+      </Dropdown>
+    </>
   )
 }
