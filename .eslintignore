@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+.tanstack/
+
+# Generated files
+routeTree.gen.ts
+
+# Template files
+vite-template-main/
+
+# Config files that don't need linting
+*.config.js
+*.config.ts
