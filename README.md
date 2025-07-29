@@ -12,6 +12,7 @@ A frontend productivity tool for Ubiquiti developers, designers, PMs, and other 
 ## Getting Started
 
 1. Install dependencies:
+
    ```bash
    pnpm install
    ```
@@ -24,3 +25,10 @@ A frontend productivity tool for Ubiquiti developers, designers, PMs, and other 
 ## Development Standards
 
 For comprehensive coding standards and best practices, refer to the `.cursorrules` file. Keep this file up to date to maintain a single source of truth for development guidelines.
+
+## Things to Improve
+
+- Request an improved Figma design with unified color tokens and match them 1:1 to Tailwind variables
+- Request a corporate font file and replace it with the fallback font used in the app
+- Extract texts to an i18n file and consider localization
+- Consider customization of a mobile view
