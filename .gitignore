@@ -2,6 +2,9 @@ node_modules
 dist/
 build/
 .tanstack/
+.output/
+.nitro/
+.vercel/
 
 # ESLint and Prettier cache
 .eslintcache

@@ -1,8 +1,10 @@
 // src/routes/__root.tsx
 /// <reference types="vite/client" />
 import { HeroUIProvider } from '@heroui/react'
+import type { QueryClient } from '@tanstack/react-query'
+import { QueryClientProvider } from '@tanstack/react-query'
 import {
-  createRootRoute,
+  createRootRouteWithContext,
   HeadContent,
   Outlet,
   Scripts,
@@ -13,7 +15,11 @@ import type { ReactNode } from 'react'
 import Header from '@/components/layout/Header'
 import appCss from '@/styles/app.css?url'
 
-export const Route = createRootRoute({
+interface RouterContext {
+  queryClient: QueryClient
+}
+
+export const Route = createRootRouteWithContext<RouterContext>()({
   head: () => ({
     meta: [
       {
@@ -36,12 +42,16 @@ function RootComponent() {
   let router = useRouter()
   return (
     <RootDocument>
-      <HeroUIProvider
-        navigate={(to, options) => router.navigate({ to, ...(options || {}) })}
-        useHref={to => router.buildLocation({ to }).href}
-      >
-        <Outlet />
-      </HeroUIProvider>
+      <QueryClientProvider client={router.options.context.queryClient}>
+        <HeroUIProvider
+          navigate={(to, options) =>
+            router.navigate({ to, ...(options || {}) })
+          }
+          useHref={to => router.buildLocation({ to }).href}
+        >
+          <Outlet />
+        </HeroUIProvider>
+      </QueryClientProvider>
     </RootDocument>
   )
 }
