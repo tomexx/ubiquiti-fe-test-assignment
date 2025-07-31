@@ -26,5 +26,5 @@ export function DeviceStats({
     return `${totalDevices} devices`
   }
 
-  return <span className='text-sm text-gray-600'>{getStatsText()}</span>
+  return <span className='text-sm text-gray-04'>{getStatsText()}</span>
 }
