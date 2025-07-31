@@ -41,7 +41,7 @@ function Home() {
         <p className='text-sm text-gray-600'>Version: {data.version}</p>
       </div>
 
-      <div className='flex-1 min-h-0'>
+      <div className='flex-1 max-h-80 h-80'>
         <VirtualizedDevicesTable devices={data.devices} isLoading={isLoading} />
       </div>
     </div>

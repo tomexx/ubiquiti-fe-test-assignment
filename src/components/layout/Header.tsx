@@ -4,7 +4,7 @@ import { Link } from '@heroui/react'
 const Header = () => {
   return (
     <div className='w-full h-[50px]'>
-      <div className='flex bg-neutral-02 text-text-03 items-center flex-shrink-0 fixed w-full z-10'>
+      <div className='flex bg-neutral-02 text-text-03 items-center flex-shrink-0'>
         <Link
           href='/'
           className='flex items-center focus:outline-ublue-06 focus:outline-1'

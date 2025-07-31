@@ -1,6 +1,9 @@
 @theme {
+  --color-neutral-01: #f9fafa;
   --color-neutral-02: #f4f5f6;
   --color-neutral-10: #50565e;
+  --color-text-01-light: rgba(0, 0, 0, 0.85);
+  --color-text-03-light: rgba(0, 0, 0, 0.45);
   --color-text-03: #808893;
   --color-ublue-06: #006fff;
   --color-ublue-07: #0059cc;

@@ -1,13 +1,13 @@
 // src/routes/__root.tsx
 /// <reference types="vite/client" />
-import { HeroUIProvider } from '@heroui/react'
+import { HeroUIProvider, ToastProvider } from '@heroui/react'
 import type { QueryClient } from '@tanstack/react-query'
 import { QueryClientProvider } from '@tanstack/react-query'
 import {
-  createRootRouteWithContext,
   HeadContent,
   Outlet,
   Scripts,
+  createRootRouteWithContext,
   useRouter,
 } from '@tanstack/react-router'
 import type { ReactNode } from 'react'
@@ -49,6 +49,7 @@ function RootComponent() {
           }
           useHref={to => router.buildLocation({ to }).href}
         >
+          <ToastProvider />
           <Outlet />
         </HeroUIProvider>
       </QueryClientProvider>
