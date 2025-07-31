@@ -1,13 +1,6 @@
 import { useDevices } from '@/api/queries/devices'
-import {
-  Spinner,
-  Table,
-  TableBody,
-  TableCell,
-  TableColumn,
-  TableHeader,
-  TableRow,
-} from '@heroui/react'
+import { VirtualizedDevicesTable } from '@/components/features'
+import { Spinner } from '@heroui/react'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/')({
@@ -42,52 +35,15 @@ function Home() {
   }
 
   return (
-    <div className='p-6'>
-      <h1 className='text-2xl font-bold mb-6'>Ubiquiti Devices</h1>
-      <p className='text-sm text-gray-600 mb-4'>Version: {data.version}</p>
+    <div className='h-full flex flex-col'>
+      <div className='flex-shrink-0 p-6 pb-4 bg-white border-b border-gray-200'>
+        <h1 className='text-2xl font-bold mb-2'>Ubiquiti Devices</h1>
+        <p className='text-sm text-gray-600'>Version: {data.version}</p>
+      </div>
 
-      <Table aria-label='Ubiquiti devices table'>
-        <TableHeader>
-          <TableColumn>ID</TableColumn>
-          <TableColumn>Default Image</TableColumn>
-          <TableColumn>No Padding Image</TableColumn>
-          <TableColumn>Topology Image</TableColumn>
-        </TableHeader>
-        <TableBody>
-          {data.devices.map(device => (
-            <TableRow key={device.id}>
-              <TableCell className='font-mono text-sm'>{device.id}</TableCell>
-              <TableCell>
-                {/* <Image
-                  src={device.images.default}
-                  alt={`${device.id} default`}
-                  width={100}
-                  height={60}
-                  className='object-contain'
-                /> */}
-              </TableCell>
-              <TableCell>
-                {/* <Image
-                  src={device.images.nopadding}
-                  alt={`${device.id} no padding`}
-                  width={100}
-                  height={60}
-                  className='object-contain'
-                /> */}
-              </TableCell>
-              <TableCell>
-                {/* <Image
-                  src={device.images.topology}
-                  alt={`${device.id} topology`}
-                  width={100}
-                  height={60}
-                  className='object-contain'
-                /> */}
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      <div className='flex-1 min-h-0'>
+        <VirtualizedDevicesTable devices={data.devices} isLoading={isLoading} />
+      </div>
     </div>
   )
 }

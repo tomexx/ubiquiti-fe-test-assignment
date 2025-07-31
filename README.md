@@ -2,6 +2,10 @@
 
 A frontend productivity tool for Ubiquiti developers, designers, PMs, and other roles to discover, verify, share, and align on insights about Ubiquiti's products and their images by visualizing the product database (UIDB).
 
+## Demo
+
+[https://ubiquiti-fe-test-assignment.vercel.app/](https://ubiquiti-fe-test-assignment.vercel.app/)
+
 ## Tech Stack
 
 - **Frontend**: React 19, TypeScript, TanStack Start
@@ -18,6 +22,7 @@ A frontend productivity tool for Ubiquiti developers, designers, PMs, and other 
    ```
 
 2. Start development server:
+
    ```bash
    pnpm dev
    ```
