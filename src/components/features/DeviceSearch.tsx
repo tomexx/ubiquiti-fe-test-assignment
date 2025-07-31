@@ -1,4 +1,5 @@
 import { Device } from '@/api/types/device'
+import { ClearIcon, SearchIcon } from '@/components/icons'
 import { Input } from '@heroui/react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
@@ -192,21 +193,7 @@ export function DeviceSearch({
         })}
         aria-autocomplete='list'
         aria-label='Search devices by name'
-        startContent={
-          <svg
-            className='w-4 h-4 text-gray-400'
-            fill='none'
-            stroke='currentColor'
-            viewBox='0 0 24 24'
-          >
-            <path
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              strokeWidth={2}
-              d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'
-            />
-          </svg>
-        }
+        startContent={<SearchIcon className='w-4 h-4 text-gray-400' />}
         endContent={
           searchTerm.trim() && (
             <button
@@ -215,19 +202,7 @@ export function DeviceSearch({
               className='p-1 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer'
               aria-label='Clear search'
             >
-              <svg
-                className='w-4 h-4'
-                fill='none'
-                stroke='currentColor'
-                viewBox='0 0 24 24'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth={2}
-                  d='M6 18L18 6M6 6l12 12'
-                />
-              </svg>
+              <ClearIcon className='w-4 h-4' />
             </button>
           )
         }

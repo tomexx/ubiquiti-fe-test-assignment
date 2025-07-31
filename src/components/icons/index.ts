@@ -6,4 +6,7 @@ export { SvgIcon } from './SvgIcon'
 export { LogoIcon } from './LogoIcon'
 
 // Feature Icons
-// TODO
+export { ClearIcon } from './ClearIcon'
+export { GridIcon } from './GridIcon'
+export { SearchIcon } from './SearchIcon'
+export { TableIcon } from './TableIcon'
