@@ -311,7 +311,7 @@ export function DeviceSearch({
               }}
             >
               <span
-                className='text-sm color-text-02 inline-block pr-2'
+                className='text-sm color-neutral-10 inline-block pr-2'
                 dangerouslySetInnerHTML={{
                   __html: suggestion.highlightedName,
                 }}
