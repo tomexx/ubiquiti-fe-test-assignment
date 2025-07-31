@@ -47,7 +47,7 @@ export function DevicesTable({
   return (
     <div className='w-full h-full px-8'>
       {/* Table Header */}
-      <div className='w-full border-separate border-spacing-0'>
+      <div className='w-full border-separate border-spacing-0 sticky top-0 z-10 bg-white/50 backdrop-blur-xs'>
         <div className='flex border-b border-neutral-03'>
           <div className='w-1/2 px-2 py-2 text-sm font-bold text-neutral-10'>
             Product Line
