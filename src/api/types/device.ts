@@ -1,3 +1,9 @@
+export interface RadioSpec {
+  gain: number
+  maxPower: number
+  maxSpeedMegabitsPerSecond: number
+}
+
 export interface Device {
   id: string
   images: {
@@ -14,10 +20,12 @@ export interface Device {
     name: string
   }
   shortnames: string[]
-  // Optional fields that may be available in future API versions
-  maxPower?: string | number
-  speed?: string | number
-  numberOfPorts?: number
+  unifi: {
+    network: {
+      numberOfPorts: number
+      radios: Record<string, RadioSpec>
+    }
+  }
 }
 
 export interface Devices {

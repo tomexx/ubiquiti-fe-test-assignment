@@ -37,3 +37,5 @@ For comprehensive coding standards and best practices, refer to the `.cursorrule
 - Request a corporate font file and replace it with the fallback font used in the app
 - Extract texts to an i18n file and consider localization
 - Consider customization of a mobile view
+- Check device details data presentation, it might be broken (provided Figma vs. available data in the data endpoint)
+- Cover project with tests (E2E, unit etc.)
