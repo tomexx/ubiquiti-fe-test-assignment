@@ -23,6 +23,17 @@ export function DeviceSearch({
   const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1)
   const searchInputRef = useRef<HTMLInputElement>(null)
   const suggestionsRef = useRef<HTMLDivElement>(null)
+  const suggestionRefs = useRef<(HTMLDivElement | null)[]>([])
+
+  // Generate unique IDs for accessibility
+  const searchId = useMemo(
+    () => `search-${Math.random().toString(36).substr(2, 9)}`,
+    []
+  )
+  const listboxId = useMemo(
+    () => `listbox-${Math.random().toString(36).substr(2, 9)}`,
+    []
+  )
 
   // Helper function to highlight matching text
   const highlightMatch = useCallback((text: string, searchTerm: string) => {
@@ -80,13 +91,37 @@ export function DeviceSearch({
     switch (e.key) {
       case 'ArrowDown':
         e.preventDefault()
-        setSelectedSuggestionIndex(prev =>
-          prev < searchSuggestions.length - 1 ? prev + 1 : prev
-        )
+        setSelectedSuggestionIndex(prev => {
+          const newIndex = prev < searchSuggestions.length - 1 ? prev + 1 : prev
+          // Scroll selected suggestion into view
+          setTimeout(() => {
+            const selectedElement = suggestionRefs.current[newIndex]
+            if (selectedElement) {
+              selectedElement.scrollIntoView({
+                behavior: 'smooth',
+                block: 'nearest',
+              })
+            }
+          }, 0)
+          return newIndex
+        })
         break
       case 'ArrowUp':
         e.preventDefault()
-        setSelectedSuggestionIndex(prev => (prev > 0 ? prev - 1 : -1))
+        setSelectedSuggestionIndex(prev => {
+          const newIndex = prev > 0 ? prev - 1 : -1
+          // Scroll selected suggestion into view
+          setTimeout(() => {
+            const selectedElement = suggestionRefs.current[newIndex]
+            if (selectedElement && newIndex >= 0) {
+              selectedElement.scrollIntoView({
+                behavior: 'smooth',
+                block: 'nearest',
+              })
+            }
+          }, 0)
+          return newIndex
+        })
         break
       case 'Enter':
         e.preventDefault()
@@ -100,9 +135,23 @@ export function DeviceSearch({
       case 'Escape':
         setShowSuggestions(false)
         setSelectedSuggestionIndex(-1)
+        searchInputRef.current?.focus()
+        break
+      case 'Tab':
+        // Allow Tab to close suggestions and move to next focusable element
+        setShowSuggestions(false)
+        setSelectedSuggestionIndex(-1)
         break
     }
   }
+
+  // Clean up suggestion refs when suggestions change
+  useEffect(() => {
+    suggestionRefs.current = suggestionRefs.current.slice(
+      0,
+      searchSuggestions.length
+    )
+  }, [searchSuggestions.length])
 
   // Close suggestions when clicking outside
   useEffect(() => {
@@ -126,6 +175,7 @@ export function DeviceSearch({
     <div className={`relative ${className}`}>
       <Input
         ref={searchInputRef}
+        id={searchId}
         placeholder='Search devices by name...'
         value={searchTerm}
         onValueChange={handleSearchChange}
@@ -133,6 +183,15 @@ export function DeviceSearch({
         onFocus={() => setShowSuggestions(searchTerm.trim().length > 0)}
         className='w-full'
         size='sm'
+        role='combobox'
+        aria-expanded={showSuggestions}
+        aria-haspopup='listbox'
+        aria-owns={showSuggestions ? listboxId : undefined}
+        {...(selectedSuggestionIndex >= 0 && {
+          'aria-activedescendant': `${listboxId}-option-${selectedSuggestionIndex}`,
+        })}
+        aria-autocomplete='list'
+        aria-label='Search devices by name'
         startContent={
           <svg
             className='w-4 h-4 text-gray-400'
@@ -178,12 +237,22 @@ export function DeviceSearch({
       {showSuggestions && searchSuggestions.length > 0 && (
         <div
           ref={suggestionsRef}
+          id={listboxId}
+          role='listbox'
+          aria-label='Search suggestions'
           className='absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-80 overflow-y-auto'
         >
           {searchSuggestions.map((suggestion, index) => (
             <div
               key={suggestion.id}
-              className={`flex items-center justify-between px-4 py-3 cursor-pointer transition-colors ${
+              ref={el => {
+                suggestionRefs.current[index] = el
+              }}
+              id={`${listboxId}-option-${index}`}
+              role='option'
+              aria-selected={index === selectedSuggestionIndex}
+              tabIndex={-1}
+              className={`flex items-center justify-between px-4 py-3 cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset ${
                 index === selectedSuggestionIndex
                   ? 'bg-blue-50 border-l-2 border-l-blue-500'
                   : 'hover:bg-gray-50'
@@ -193,6 +262,17 @@ export function DeviceSearch({
                   : ''
               }`}
               onClick={() => handleSuggestionClick(suggestion)}
+              onMouseEnter={() => setSelectedSuggestionIndex(index)}
+              onKeyDown={e => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault()
+                  handleSuggestionClick(suggestion)
+                } else if (e.key === 'Escape') {
+                  setShowSuggestions(false)
+                  setSelectedSuggestionIndex(-1)
+                  searchInputRef.current?.focus()
+                }
+              }}
             >
               <span className='text-sm text-gray-600 font-medium'>
                 {suggestion.line.name}
