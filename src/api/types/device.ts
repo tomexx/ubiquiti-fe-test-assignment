@@ -14,6 +14,10 @@ export interface Device {
     name: string
   }
   shortnames: string[]
+  // Optional fields that may be available in future API versions
+  maxPower?: string | number
+  speed?: string | number
+  numberOfPorts?: number
 }
 
 export interface Devices {

@@ -1,5 +1,6 @@
 import { useDevice } from '@/api/queries/devices'
 import { ProductImage } from '@/components/common'
+import { DeviceDetails } from '@/components/features'
 import { BackButton, ContextualHeader } from '@/components/layout'
 import {
   Button,
@@ -76,75 +77,33 @@ function DeviceDetail() {
   return (
     <>
       <ContextualHeader leftContent={<BackButton onBack={handleBack} />} />
-      <div className='h-full flex flex-col p-6'>
+      <div className='h-full flex flex-col p-4 sm:p-6'>
         <div className='max-w-4xl mx-auto w-full'>
-          {/* Header with Back button and JSON button */}
-
-          {/* Main content */}
-          <div className='flex gap-8 items-start'>
-            <div className='flex-shrink-0 bg-neutral-01 rounded-lg'>
+          <div className='flex flex-col sm:flex-row gap-6 sm:gap-8 items-start'>
+            <div className='flex-shrink-0 bg-neutral-01 rounded-lg mx-auto sm:mx-0'>
               <ProductImage
                 productId={device.id}
                 imageId={device.images.default}
                 size={300}
                 alt={device.product.name}
+                className='w-[300px] h-[300px] object-cover'
               />
             </div>
 
             {/* Product Details */}
-            <div className='flex-1 space-y-6'>
+            <div className='flex-1 space-y-6 w-full'>
               <div>
-                <h1 className='text-2xl font-bold mb-2'>
+                <h1 className='text-xl sm:text-2xl font-bold mb-2'>
                   {device.product.name}
                 </h1>
-                <p className='text-xs text-text-03'>{device.line.name}</p>
-                <div className='space-y-3'>
-                  <div>
-                    <span className='font-medium text-gray-700'>ID:</span>
-                    <span className='ml-2 font-mono text-sm'>{device.id}</span>
-                  </div>
-                  <div>
-                    <span className='font-medium text-gray-700'>Name:</span>
-                    <span className='ml-2'>{device.product.name}</span>
-                  </div>
-                  <div>
-                    <span className='font-medium text-gray-700'>
-                      Abbreviation:
-                    </span>
-                    <span className='ml-2 font-mono text-sm'>
-                      {device.product.abbrev}
-                    </span>
-                  </div>
-                  <div>
-                    <span className='font-medium text-gray-700'>
-                      Product Line:
-                    </span>
-                    <span className='ml-2'>
-                      {device.line.name} ({device.line.id})
-                    </span>
-                  </div>
-                  {device.shortnames?.length > 0 && (
-                    <div>
-                      <span className='font-medium text-gray-700'>
-                        Short Names:
-                      </span>
-                      <div className='ml-2 mt-1'>
-                        {device.shortnames.map((name, index) => (
-                          <span
-                            key={index}
-                            className='inline-block bg-gray-100 text-gray-700 px-2 py-1 rounded text-sm mr-2 mb-1 font-mono'
-                          >
-                            {name}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  <div className='mt-6'>
-                    <Link onClick={onOpen} className='cursor-pointer text-sm'>
-                      See All Details as JSON
-                    </Link>
-                  </div>
+                <p className='text-xs text-text-03 mb-4'>{device.line.name}</p>
+
+                <DeviceDetails device={device} className='mb-6' />
+
+                <div className='mt-6'>
+                  <Link onClick={onOpen} className='cursor-pointer text-sm'>
+                    See All Details as JSON
+                  </Link>
                 </div>
               </div>
             </div>
