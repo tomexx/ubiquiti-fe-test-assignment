@@ -3,8 +3,8 @@ import { DeviceFilters } from '@/components/features/DeviceFilters'
 import { DeviceSearch } from '@/components/features/DeviceSearch'
 import { DeviceStats } from '@/components/features/DeviceStats'
 import { DevicesGrid } from '@/components/features/DevicesGrid'
+import { DevicesTable } from '@/components/features/DevicesTable'
 import { ViewMode, ViewToggle } from '@/components/features/ViewToggle'
-import { VirtualizedDevicesTable } from '@/components/features/VirtualizedDevicesTable'
 import { ContextualHeader } from '@/components/layout'
 import { useDeviceFilters } from '@/hooks/useDeviceFilters'
 import { Spinner } from '@heroui/react'
@@ -91,10 +91,7 @@ export function Index() {
       <div className='h-full flex flex-col'>
         <div className='flex-1 max-h-80 h-80'>
           {viewMode === 'table' ? (
-            <VirtualizedDevicesTable
-              devices={filteredDevices}
-              isLoading={isLoading}
-            />
+            <DevicesTable devices={filteredDevices} isLoading={isLoading} />
           ) : (
             <DevicesGrid devices={filteredDevices} isLoading={isLoading} />
           )}
