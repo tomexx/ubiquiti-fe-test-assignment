@@ -1,6 +1,7 @@
 import { Device } from '@/api/types/device'
-import { LazyImage } from '@/components/ui'
+import { ProductImage } from '@/components/common'
 import { Spinner } from '@heroui/react'
+import { useNavigate } from '@tanstack/react-router'
 import {
   createColumnHelper,
   flexRender,
@@ -18,34 +19,30 @@ interface VirtualizedDevicesTableProps {
 const columnHelper = createColumnHelper<Device>()
 
 const columns = [
-  columnHelper.accessor('images.nopadding', {
+  columnHelper.accessor('id', {
     id: 'image',
-    header: 'Image',
+    header: '',
     cell: info => (
-      <div className='w-20 h-12 flex items-center justify-center'>
-        <LazyImage
-          src={info.getValue()}
-          alt={`${info.row.original.id} device`}
-          width={80}
-          height={48}
-          className='object-contain'
-          fallbackSrc='/placeholder-device.png'
+      <div className='size-[22px] flex items-center justify-center'>
+        <ProductImage
+          productId={info.getValue()}
+          imageId={info.row.original.images.default}
+          size={22}
+          alt=''
         />
       </div>
     ),
-    size: 100,
+    size: 36,
   }),
   columnHelper.accessor('id', {
     id: 'productLine',
     header: 'Product Line',
     cell: info => <span className='font-mono text-sm'>{info.getValue()}</span>,
-    size: 200,
   }),
   columnHelper.accessor('id', {
     id: 'name',
     header: 'Name',
     cell: info => <span className='font-mono text-sm'>{info.getValue()}</span>,
-    size: 200,
   }),
 ]
 
@@ -54,6 +51,7 @@ export function VirtualizedDevicesTable({
   isLoading = false,
 }: VirtualizedDevicesTableProps) {
   const parentRef = useRef<HTMLDivElement>(null)
+  const navigate = useNavigate()
 
   const table = useReactTable({
     data: devices,
@@ -124,11 +122,17 @@ export function VirtualizedDevicesTable({
             return (
               <div
                 key={row.id}
-                className='absolute top-0 left-0 w-full flex items-center border-b border-gray-200 hover:bg-gray-50 transition-colors'
+                className='absolute top-0 left-0 w-full flex items-center border-b border-gray-200 hover:bg-gray-50 transition-colors cursor-pointer'
                 style={{
                   height: `${virtualItem.size}px`,
                   transform: `translateY(${virtualItem.start}px)`,
                 }}
+                onClick={() =>
+                  navigate({
+                    to: '/device/$id',
+                    params: { id: row.original.id },
+                  })
+                }
               >
                 {row.getVisibleCells().map(cell => (
                   <div

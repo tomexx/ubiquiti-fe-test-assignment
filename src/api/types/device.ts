@@ -5,6 +5,15 @@ export interface Device {
     nopadding: string
     topology: string
   }
+  line: {
+    id: string
+    name: string
+  }
+  product: {
+    abbrev: string
+    name: string
+  }
+  shortnames: string[]
 }
 
 export interface Devices {
