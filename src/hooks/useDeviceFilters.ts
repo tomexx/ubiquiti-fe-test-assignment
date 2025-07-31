@@ -1,9 +1,22 @@
 import { Device } from '@/api/types/device'
-import { useMemo, useState } from 'react'
+import { useNavigate } from '@tanstack/react-router'
+import { useCallback, useMemo, useState } from 'react'
 
-export function useDeviceFilters(devices: Device[] | undefined) {
-  const [searchTerm, setSearchTerm] = useState('')
-  const [selectedProductLines, setSelectedProductLines] = useState<string[]>([])
+interface UseDeviceFiltersOptions {
+  initialSearch?: string
+  initialProductLines?: string[]
+}
+
+export function useDeviceFilters(
+  devices: Device[] | undefined,
+  options: UseDeviceFiltersOptions = {}
+) {
+  const navigate = useNavigate()
+  const { initialSearch = '', initialProductLines = [] } = options
+
+  const [searchTerm, setSearchTerm] = useState(initialSearch)
+  const [selectedProductLines, setSelectedProductLines] =
+    useState<string[]>(initialProductLines)
 
   // Get unique product lines from all devices
   const productLines = useMemo(() => {
@@ -36,23 +49,48 @@ export function useDeviceFilters(devices: Device[] | undefined) {
     )
   }, [productLineFilteredDevices, searchTerm])
 
+  // Update URL when filters change
+  const updateUrl = useCallback(
+    (newSearchTerm: string, newProductLines: string[]) => {
+      const searchParams: Record<string, string> = {}
+
+      if (newSearchTerm.trim()) {
+        searchParams.search = newSearchTerm.trim()
+      }
+
+      if (newProductLines.length > 0) {
+        searchParams.productLines = newProductLines.join(',')
+      }
+
+      navigate({
+        to: '/',
+        search: searchParams,
+        replace: true,
+      })
+    },
+    [navigate]
+  )
+
   const handleProductLineChange = (
     productLine: string,
     isSelected: boolean
   ) => {
-    setSelectedProductLines(prev =>
-      isSelected
-        ? [...prev, productLine]
-        : prev.filter(line => line !== productLine)
-    )
+    const newProductLines = isSelected
+      ? [...selectedProductLines, productLine]
+      : selectedProductLines.filter(line => line !== productLine)
+
+    setSelectedProductLines(newProductLines)
+    updateUrl(searchTerm, newProductLines)
   }
 
   const handleResetFilters = () => {
     setSelectedProductLines([])
+    updateUrl(searchTerm, [])
   }
 
   const handleSearchChange = (value: string) => {
     setSearchTerm(value)
+    updateUrl(value, selectedProductLines)
   }
 
   const isFilterActive = selectedProductLines.length > 0

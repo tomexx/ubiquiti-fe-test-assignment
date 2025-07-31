@@ -11,13 +11,36 @@ import { Spinner } from '@heroui/react'
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 
+interface SearchParams {
+  search?: string | undefined
+  productLines?: string | undefined
+}
+
 export const Route = createFileRoute('/')({
+  validateSearch: (search: Record<string, unknown>): SearchParams => {
+    return {
+      search:
+        typeof search.search === 'string' && search.search
+          ? search.search
+          : undefined,
+      productLines:
+        typeof search.productLines === 'string' && search.productLines
+          ? search.productLines
+          : undefined,
+    }
+  },
   component: Index,
 })
 
 export function Index() {
   const { data, isLoading, error } = useDevices()
+  const { search, productLines: urlProductLinesString } = Route.useSearch()
   const [viewMode, setViewMode] = useState<ViewMode>('table')
+
+  // Parse productLines from URL string
+  const urlProductLines = urlProductLinesString
+    ? urlProductLinesString.split(',').filter(Boolean)
+    : []
 
   const {
     searchTerm,
@@ -29,7 +52,10 @@ export function Index() {
     handleProductLineChange,
     handleResetFilters,
     handleSearchChange,
-  } = useDeviceFilters(data?.devices)
+  } = useDeviceFilters(data?.devices, {
+    initialSearch: search || '',
+    initialProductLines: urlProductLines,
+  })
 
   if (isLoading) {
     return (

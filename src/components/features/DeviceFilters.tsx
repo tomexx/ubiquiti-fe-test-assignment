@@ -44,6 +44,7 @@ export function DeviceFilters({
               <DropdownItem
                 key='reset'
                 className='border-t border-gray-200 mt-1'
+                textValue='Reset'
               >
                 <Button
                   size='sm'
