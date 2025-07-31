@@ -1,4 +1,5 @@
 const {heroui} = require("@heroui/theme");
+const heroTheme = require("./src/styles/hero.ts").default;
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -10,5 +11,5 @@ module.exports = {
     extend: {},
   },
   darkMode: "class",
-  plugins: [heroui()],
+  plugins: [heroTheme],
 };

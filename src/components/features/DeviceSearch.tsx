@@ -1,7 +1,10 @@
 import { Device } from '@/api/types/device'
 import { ClearIcon, SearchIcon } from '@/components/icons'
+import { generateId } from '@/utils'
 import { Input } from '@heroui/react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+
+const INITIAL_SUGGESTIONS_LIMIT = 10
 
 interface SearchSuggestion extends Device {
   highlightedName: string
@@ -22,19 +25,14 @@ export function DeviceSearch({
 }: DeviceSearchProps) {
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1)
+  const [showAllSuggestions, setShowAllSuggestions] = useState(false)
   const searchInputRef = useRef<HTMLInputElement>(null)
   const suggestionsRef = useRef<HTMLDivElement>(null)
   const suggestionRefs = useRef<(HTMLDivElement | null)[]>([])
 
   // Generate unique IDs for accessibility
-  const searchId = useMemo(
-    () => `search-${Math.random().toString(36).substr(2, 9)}`,
-    []
-  )
-  const listboxId = useMemo(
-    () => `listbox-${Math.random().toString(36).substr(2, 9)}`,
-    []
-  )
+  const searchId = useMemo(() => generateId('search'), [])
+  const listboxId = useMemo(() => generateId('listbox'), [])
 
   // Helper function to highlight matching text
   const highlightMatch = useCallback((text: string, searchTerm: string) => {
@@ -50,33 +48,52 @@ export function DeviceSearch({
     )
   }, [])
 
-  // Get search suggestions from devices
-  const searchSuggestions = useMemo((): SearchSuggestion[] => {
+  // Get all matching devices for search suggestions
+  const allMatchingDevices = useMemo(() => {
     if (!devices || !searchTerm.trim()) return []
 
-    const suggestions = devices
-      .filter(device =>
-        device.product.name.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-      .slice(0, 10) // Limit to 10 suggestions
-      .map(device => ({
-        ...device,
-        highlightedName: highlightMatch(device.product.name, searchTerm),
-      }))
+    return devices.filter(device =>
+      device.product.name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  }, [devices, searchTerm])
+
+  // Get search suggestions from devices (limited or all based on showAllSuggestions)
+  const searchSuggestions = useMemo((): SearchSuggestion[] => {
+    if (!allMatchingDevices.length) return []
+
+    const limit = showAllSuggestions
+      ? allMatchingDevices.length
+      : INITIAL_SUGGESTIONS_LIMIT
+    const suggestions = allMatchingDevices.slice(0, limit).map(device => ({
+      ...device,
+      highlightedName: highlightMatch(device.product.name, searchTerm),
+    }))
 
     return suggestions
-  }, [devices, searchTerm, highlightMatch])
+  }, [allMatchingDevices, showAllSuggestions, highlightMatch, searchTerm])
+
+  // Calculate remaining results count
+  const remainingResultsCount = useMemo(() => {
+    if (
+      showAllSuggestions ||
+      allMatchingDevices.length <= INITIAL_SUGGESTIONS_LIMIT
+    )
+      return 0
+    return allMatchingDevices.length - INITIAL_SUGGESTIONS_LIMIT
+  }, [allMatchingDevices.length, showAllSuggestions])
 
   const handleSearchChange = (value: string) => {
     onSearchChange(value)
     setShowSuggestions(value.trim().length > 0)
     setSelectedSuggestionIndex(-1)
+    setShowAllSuggestions(false) // Reset expanded state when search changes
   }
 
   const handleClearSearch = () => {
     onSearchChange('')
     setShowSuggestions(false)
     setSelectedSuggestionIndex(-1)
+    setShowAllSuggestions(false)
     searchInputRef.current?.focus()
   }
 
@@ -84,24 +101,48 @@ export function DeviceSearch({
     onSearchChange(suggestion.product.name)
     setShowSuggestions(false)
     setSelectedSuggestionIndex(-1)
+    setShowAllSuggestions(false)
+  }
+
+  const handleLoadMoreResults = () => {
+    setShowAllSuggestions(true)
+    setSelectedSuggestionIndex(-1) // Reset selection when expanding
   }
 
   const handleSearchKeyDown = (e: React.KeyboardEvent) => {
     if (!showSuggestions || searchSuggestions.length === 0) return
 
+    // Total navigable items: suggestions + load more button (if present)
+    const totalItems =
+      searchSuggestions.length + (remainingResultsCount > 0 ? 1 : 0)
+    const loadMoreButtonIndex = searchSuggestions.length // Index for the load more button
+
     switch (e.key) {
       case 'ArrowDown':
         e.preventDefault()
         setSelectedSuggestionIndex(prev => {
-          const newIndex = prev < searchSuggestions.length - 1 ? prev + 1 : prev
-          // Scroll selected suggestion into view
+          const newIndex = prev < totalItems - 1 ? prev + 1 : prev
+          // Scroll selected element into view
           setTimeout(() => {
-            const selectedElement = suggestionRefs.current[newIndex]
-            if (selectedElement) {
-              selectedElement.scrollIntoView({
-                behavior: 'smooth',
-                block: 'nearest',
-              })
+            if (newIndex === loadMoreButtonIndex && remainingResultsCount > 0) {
+              // Focus the load more button
+              const loadMoreButton = document.querySelector(
+                '[data-load-more-button]'
+              ) as HTMLButtonElement
+              if (loadMoreButton) {
+                loadMoreButton.scrollIntoView({
+                  behavior: 'smooth',
+                  block: 'nearest',
+                })
+              }
+            } else {
+              const selectedElement = suggestionRefs.current[newIndex]
+              if (selectedElement) {
+                selectedElement.scrollIntoView({
+                  behavior: 'smooth',
+                  block: 'nearest',
+                })
+              }
             }
           }, 0)
           return newIndex
@@ -127,9 +168,18 @@ export function DeviceSearch({
       case 'Enter':
         e.preventDefault()
         if (selectedSuggestionIndex >= 0) {
-          const selectedSuggestion = searchSuggestions[selectedSuggestionIndex]
-          if (selectedSuggestion) {
-            handleSuggestionClick(selectedSuggestion)
+          if (
+            selectedSuggestionIndex === loadMoreButtonIndex &&
+            remainingResultsCount > 0
+          ) {
+            // Trigger load more action
+            handleLoadMoreResults()
+          } else {
+            const selectedSuggestion =
+              searchSuggestions[selectedSuggestionIndex]
+            if (selectedSuggestion) {
+              handleSuggestionClick(selectedSuggestion)
+            }
           }
         }
         break
@@ -154,6 +204,12 @@ export function DeviceSearch({
     )
   }, [searchSuggestions.length])
 
+  // Reset expanded state when devices change (e.g., when filters are applied)
+  useEffect(() => {
+    setShowAllSuggestions(false)
+    setSelectedSuggestionIndex(-1)
+  }, [devices])
+
   // Close suggestions when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -177,7 +233,7 @@ export function DeviceSearch({
       <Input
         ref={searchInputRef}
         id={searchId}
-        placeholder='Search devices by name...'
+        placeholder='Search'
         value={searchTerm}
         onValueChange={handleSearchChange}
         onKeyDown={handleSearchKeyDown}
@@ -193,16 +249,18 @@ export function DeviceSearch({
         })}
         aria-autocomplete='list'
         aria-label='Search devices by name'
-        startContent={<SearchIcon className='w-4 h-4 text-gray-400' />}
+        startContent={
+          <SearchIcon className='w-[20px] h-[20px] text-neutral-08' />
+        }
         endContent={
           searchTerm.trim() && (
             <button
               type='button'
               onClick={handleClearSearch}
-              className='p-1 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer'
+              className='p-1 text-neutral-08 cursor-pointer'
               aria-label='Clear search'
             >
-              <ClearIcon className='w-4 h-4' />
+              <ClearIcon className='w-4 h-4 text-neutral-08' />
             </button>
           )
         }
@@ -215,7 +273,7 @@ export function DeviceSearch({
           id={listboxId}
           role='listbox'
           aria-label='Search suggestions'
-          className='absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-80 overflow-y-auto'
+          className='absolute top-full left-0 right-0 mt-1 bg-white border border-neutral-02 rounded-lg shadow-lg z-50 max-h-80 overflow-y-auto'
         >
           {searchSuggestions.map((suggestion, index) => (
             <div
@@ -227,13 +285,16 @@ export function DeviceSearch({
               role='option'
               aria-selected={index === selectedSuggestionIndex}
               tabIndex={-1}
-              className={`flex items-center justify-between px-4 py-3 cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset ${
+              className={`flex items-center justify-between px-4 py-3 cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-ublue-06 focus:ring-inset ${
                 index === selectedSuggestionIndex
-                  ? 'bg-blue-50 border-l-2 border-l-blue-500'
-                  : 'hover:bg-gray-50'
+                  ? 'bg-ublue-06/10 border-l-2 border-l-ublue-06'
+                  : 'hover:bg-neutral-01'
               } ${
-                index !== searchSuggestions.length - 1
-                  ? 'border-b border-gray-100'
+                index !== searchSuggestions.length - 1 &&
+                remainingResultsCount === 0
+                  ? 'border-b border-neutral-02'
+                  : index !== searchSuggestions.length - 1
+                  ? 'border-b border-neutral-02'
                   : ''
               }`}
               onClick={() => handleSuggestionClick(suggestion)}
@@ -249,17 +310,49 @@ export function DeviceSearch({
                 }
               }}
             >
-              <span className='text-sm text-gray-600 font-medium'>
-                {suggestion.line.name}
-              </span>
               <span
-                className='text-sm'
+                className='text-sm color-text-02 inline-block pr-2'
                 dangerouslySetInnerHTML={{
                   __html: suggestion.highlightedName,
                 }}
               />
+              <span className='text-sm text-text-03'>
+                {suggestion.line.name}
+              </span>
             </div>
           ))}
+
+          {/* Load More Results Button */}
+          {remainingResultsCount > 0 && (
+            <div className='border-t border-neutral-02'>
+              <button
+                type='button'
+                onClick={handleLoadMoreResults}
+                data-load-more-button
+                className={`w-full px-4 py-3 text-sm text-ublue-06 hover:bg-neutral-01 transition-colors focus:outline-none focus:ring-2 focus:ring-ublue-06 focus:ring-inset cursor-pointer ${
+                  selectedSuggestionIndex === searchSuggestions.length
+                    ? 'bg-ublue-06/10 border-l-2 border-l-ublue-06'
+                    : ''
+                }`}
+                aria-label={`Load ${remainingResultsCount} more results`}
+                onKeyDown={e => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    handleLoadMoreResults()
+                  } else if (e.key === 'Escape') {
+                    setShowSuggestions(false)
+                    setSelectedSuggestionIndex(-1)
+                    searchInputRef.current?.focus()
+                  } else if (e.key === 'ArrowUp') {
+                    e.preventDefault()
+                    setSelectedSuggestionIndex(searchSuggestions.length - 1)
+                  }
+                }}
+              >
+                Load more results ({remainingResultsCount})
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>
