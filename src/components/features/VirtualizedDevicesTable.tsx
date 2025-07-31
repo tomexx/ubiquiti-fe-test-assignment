@@ -34,12 +34,12 @@ const columns = [
     ),
     size: 36,
   }),
-  columnHelper.accessor('id', {
+  columnHelper.accessor('line.name', {
     id: 'productLine',
     header: 'Product Line',
     cell: info => <span className='font-mono text-sm'>{info.getValue()}</span>,
   }),
-  columnHelper.accessor('id', {
+  columnHelper.accessor('product.name', {
     id: 'name',
     header: 'Name',
     cell: info => <span className='font-mono text-sm'>{info.getValue()}</span>,
@@ -146,13 +146,6 @@ export function VirtualizedDevicesTable({
               </div>
             )
           })}
-        </div>
-      </div>
-
-      {/* Table Footer with Row Count */}
-      <div className='bg-gray-50 border-t border-gray-200 px-4 py-3 flex-shrink-0 mb-6'>
-        <div className='text-sm text-gray-500'>
-          Showing {devices.length} devices
         </div>
       </div>
     </div>
