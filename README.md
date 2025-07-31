@@ -33,9 +33,9 @@ For comprehensive coding standards and best practices, refer to the `.cursorrule
 
 ## Things to Improve
 
-- Request an improved Figma design with unified color tokens and match them 1:1 to Tailwind variables
-- Request a corporate font file and replace it with the fallback font used in the app
-- Extract texts to an i18n file and consider localization
-- Consider customization of a mobile view
-- Check device details data presentation, it might be broken (provided Figma vs. available data in the data endpoint)
-- Cover project with tests (E2E, unit etc.)
+- Optimize speed of the app and data loading by implementing API pagination or chunked data fetching to avoid loading the entire dataset on initial server call; this would require a proper API, not the static JSON currently available.
+- Align application color variables 1:1 with unified color tokens from an updated Figma design; request improved design system/unified color tokens.
+- Obtain and integrate the official corporate font, replacing the current fallback font in the application; font is not available in Figma.
+- Externalize all user-facing text into i18n files to enable localization and internationalization support.
+- Audit and refactor device details presentation to ensure consistency between Figma specifications and the data returned from the API.
+- Add test coverage across the project, including E2E and unit tests.
