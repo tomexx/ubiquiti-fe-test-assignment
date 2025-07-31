@@ -53,8 +53,14 @@ export function DeviceDetails({ device, className = '' }: DeviceDetailsProps) {
       <DetailRow label='ID' value={device.id} />
       <DetailRow label='Name' value={device.product.name} />
       <DetailRow label='Short Name' value={shortNamesValue} />
-      <DetailRow label='Max. Power' value={`${maxPowerValue} W`} />
-      <DetailRow label='Speed' value={`${speedValue} Mbps`} />
+      <DetailRow
+        label='Max. Power'
+        value={maxPowerValue !== undefined ? `${maxPowerValue} W` : undefined}
+      />
+      <DetailRow
+        label='Speed'
+        value={speedValue !== undefined ? `${speedValue} Mbps` : undefined}
+      />
       <DetailRow label='Number of Ports' value={numberOfPortsValue} />
     </div>
   )
