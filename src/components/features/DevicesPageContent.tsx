@@ -6,6 +6,7 @@ import { useDeviceFilters } from '../../hooks/useDeviceFilters'
 import { DeviceFilters } from './DeviceFilters'
 import { DeviceSearch } from './DeviceSearch'
 import { DeviceStats } from './DeviceStats'
+import { DevicesGrid } from './DevicesGrid'
 import { ViewMode, ViewToggle } from './ViewToggle'
 import { VirtualizedDevicesTable } from './VirtualizedDevicesTable'
 
@@ -95,9 +96,7 @@ export function DevicesPageContent() {
               isLoading={isLoading}
             />
           ) : (
-            <div className='flex justify-center items-center h-full text-gray-500'>
-              <p>Grid view - Coming soon</p>
-            </div>
+            <DevicesGrid devices={filteredDevices} isLoading={isLoading} />
           )}
         </div>
       </div>

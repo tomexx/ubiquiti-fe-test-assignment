@@ -61,6 +61,13 @@ export function DeviceSearch({
     setSelectedSuggestionIndex(-1)
   }
 
+  const handleClearSearch = () => {
+    onSearchChange('')
+    setShowSuggestions(false)
+    setSelectedSuggestionIndex(-1)
+    searchInputRef.current?.focus()
+  }
+
   const handleSuggestionClick = (suggestion: SearchSuggestion) => {
     onSearchChange(suggestion.product.name)
     setShowSuggestions(false)
@@ -140,6 +147,30 @@ export function DeviceSearch({
               d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'
             />
           </svg>
+        }
+        endContent={
+          searchTerm.trim() && (
+            <button
+              type='button'
+              onClick={handleClearSearch}
+              className='p-1 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer'
+              aria-label='Clear search'
+            >
+              <svg
+                className='w-4 h-4'
+                fill='none'
+                stroke='currentColor'
+                viewBox='0 0 24 24'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth={2}
+                  d='M6 18L18 6M6 6l12 12'
+                />
+              </svg>
+            </button>
+          )
         }
       />
 
