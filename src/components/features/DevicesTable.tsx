@@ -38,18 +38,23 @@ export function DevicesTable({
   }
 
   return (
-    <div className='w-full h-full px-6'>
+    <div className='w-full h-full px-8'>
       <Table
         aria-label='Ubiquiti devices table'
         onRowAction={key => handleRowAction(key as string)}
+        removeWrapper
         classNames={{
-          table: 'min-h-[400px]',
-          th: 'w-1/2',
+          th: 'w-1/2 border-b border-neutral-03 !rounded-none first:!rounded-none last:!rounded-none bg-transparent',
+          td: 'border-b border-neutral-03 py-0.5',
+          table: 'border-separate border-spacing-0',
+          thead: '!rounded-none [&>tr]:!rounded-none [&>tr>th]:!rounded-none',
         }}
       >
         <TableHeader>
-          <TableColumn>Product Line</TableColumn>
-          <TableColumn>Name</TableColumn>
+          <TableColumn className='text-inherit pl-[56px]'>
+            Product Line
+          </TableColumn>
+          <TableColumn className='text-inherit'>Name</TableColumn>
         </TableHeader>
         <TableBody>
           {devices.map(device => (
