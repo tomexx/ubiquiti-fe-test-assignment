@@ -14,7 +14,7 @@ import {
   addToast,
   useDisclosure,
 } from '@heroui/react'
-import { createFileRoute, useNavigate, useParams } from '@tanstack/react-router'
+import { createFileRoute, useParams } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/device/$id')({
   component: DeviceDetail,
@@ -22,13 +22,8 @@ export const Route = createFileRoute('/device/$id')({
 
 function DeviceDetail() {
   const { id } = useParams({ from: '/device/$id' })
-  const navigate = useNavigate()
   const { data: device, isLoading, error } = useDevice(id)
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
-
-  const handleBack = () => {
-    navigate({ to: '/' })
-  }
 
   const handleCopyToClipboard = async () => {
     if (!device) return
@@ -50,7 +45,7 @@ function DeviceDetail() {
 
   return (
     <>
-      <ContextualHeader leftContent={<BackButton onBack={handleBack} />} />
+      <ContextualHeader leftContent={<BackButton />} />
       {isLoading && (
         <div className='flex justify-center items-center h-64'>
           <Spinner size='lg' />

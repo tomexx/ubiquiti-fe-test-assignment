@@ -68,14 +68,14 @@ export function DevicesTable({
                     />
                   </div>
                   <div className='min-w-0 flex-1'>
-                    <p className='font-mono text-sm font-medium text-gray-900 truncate'>
+                    <p className='text-sm text-neutral-10 truncate'>
                       {device.line.name}
                     </p>
                   </div>
                 </div>
               </TableCell>
               <TableCell>
-                <span className='font-mono text-sm text-gray-500'>
+                <span className='text-sm text-neutral-08'>
                   {device.product.name}
                 </span>
               </TableCell>
