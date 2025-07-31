@@ -10,26 +10,34 @@ interface ViewToggleProps {
 
 export function ViewToggle({ viewMode, onViewModeChange }: ViewToggleProps) {
   return (
-    <div className='flex border border-gray-300 rounded-lg overflow-hidden'>
+    <div className='flex gap-2'>
       <Button
         size='sm'
-        variant={viewMode === 'table' ? 'solid' : 'light'}
-        className='rounded-none border-0'
+        variant='light'
+        isIconOnly
         onPress={() => onViewModeChange('table')}
-        startContent={<TableIcon className='w-4 h-4' />}
         aria-label='Switch to table view'
+        className={
+          viewMode === 'table'
+            ? 'bg-neutral-02 text-blue-600'
+            : 'text-neutral-08'
+        }
       >
-        Table
+        <TableIcon className='w-[20px] h-[20px]' />
       </Button>
       <Button
         size='sm'
-        variant={viewMode === 'grid' ? 'solid' : 'light'}
-        className='rounded-none border-0'
+        variant='light'
+        isIconOnly
         onPress={() => onViewModeChange('grid')}
-        startContent={<GridIcon className='w-4 h-4' />}
         aria-label='Switch to grid view'
+        className={
+          viewMode === 'grid'
+            ? 'bg-neutral-02 text-blue-600'
+            : 'text-neutral-08'
+        }
       >
-        Grid
+        <GridIcon className='w-[20px] h-[20px]' />
       </Button>
     </div>
   )

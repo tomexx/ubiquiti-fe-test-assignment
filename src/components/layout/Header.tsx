@@ -16,7 +16,12 @@ const Header = () => {
             className='text-neutral-10 p-[5px] hover:text-ublue-06 '
           />
         </HeroLink>
-        <HeroLink as={RouterLink} to='/' className='inline-block ml-2'>
+        <HeroLink
+          size='sm'
+          as={RouterLink}
+          to='/'
+          className='inline-block ml-2 text-text-03'
+        >
           Devices
         </HeroLink>
         <div className='ml-auto'>
