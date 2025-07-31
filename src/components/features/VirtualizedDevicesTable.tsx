@@ -1,5 +1,6 @@
 import { Device } from '@/api/types/device'
-import { Image, Spinner } from '@heroui/react'
+import { LazyImage } from '@/components/ui'
+import { Spinner } from '@heroui/react'
 import {
   createColumnHelper,
   flexRender,
@@ -22,7 +23,7 @@ const columns = [
     header: 'Image',
     cell: info => (
       <div className='w-20 h-12 flex items-center justify-center'>
-        <Image
+        <LazyImage
           src={info.getValue()}
           alt={`${info.row.original.id} device`}
           width={80}
