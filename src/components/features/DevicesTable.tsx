@@ -45,7 +45,7 @@ export function DevicesTable({
   const virtualItems = virtualizer.getVirtualItems()
 
   return (
-    <div className='w-full h-full px-8'>
+    <div className='w-full h-full px-2 sm:px-8'>
       {/* Table Header */}
       <div className='w-full border-separate border-spacing-0 sticky top-0 z-10 bg-white/50 backdrop-blur-xs'>
         <div className='flex border-b border-neutral-03'>

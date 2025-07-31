@@ -82,7 +82,7 @@ export function Index() {
   }
 
   const leftContent = (
-    <div className='flex items-center gap-4'>
+    <div className='flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-4'>
       <DeviceSearch
         devices={productLineFilteredDevices}
         searchTerm={searchTerm}

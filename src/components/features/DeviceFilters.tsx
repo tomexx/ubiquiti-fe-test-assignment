@@ -45,6 +45,7 @@ export function DeviceFilters({
       <DropdownMenu
         aria-label='Product line filter'
         closeOnSelect={false}
+        className='max-h-[60vh] overflow-y-auto'
         items={[
           { key: 'label', name: 'Product Lines' },
           ...productLines.map(line => ({ key: line, name: line })),
