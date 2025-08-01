@@ -17,25 +17,28 @@ function DeviceGridItem({ device }: DeviceGridItemProps) {
     device.shortnames?.length > 0 ? device.shortnames.join(', ') : ''
 
   return (
-    <Card className='group hover:shadow-lg transition-shadow duration-200 relative'>
-      <CardBody className='p-0'>
-        <Link
-          to='/device/$id'
-          params={{ id: device.id }}
-          className='block focus:outline-ublue-06 focus:outline-1 rounded-lg'
-        >
+    <Link
+      to='/device/$id'
+      params={{ id: device.id }}
+      className='block focus:outline-2 focus:outline-offset-2 focus:outline-[#006fff] rounded-lg'
+    >
+      <Card
+        className='group relative border-1 border-neutral-03 bg-white hover:bg-neutral-01 h-full transition-colors'
+        shadow='none'
+      >
+        <CardBody className='p-0'>
           {/* Image container with overlay */}
-          <div className='relative aspect-square overflow-hidden rounded-t-lg bg-gray-50'>
+          <div className='relative aspect-video overflow-hidden rounded-t-lg bg-neutral-01 group-hover:bg-neutral-02 transition-colors flex items-center justify-center'>
             <ProductImage
               productId={device.id}
               imageId={device.images.default}
-              size={300}
+              size={85}
               alt={device.product.name}
-              className='w-full h-full object-contain group-hover:scale-105 transition-transform duration-200'
+              className='w-full h-full object-contain'
             />
 
             {/* Product line overlay */}
-            <div className='absolute top-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded-md backdrop-blur-sm'>
+            <div className='absolute top-[3px] right-[3px] bg-white text-ublue-06 text-xs px-2 py-1 rounded-md'>
               {device.line.name}
             </div>
           </div>
@@ -44,23 +47,23 @@ function DeviceGridItem({ device }: DeviceGridItemProps) {
           <div className='p-4'>
             <div className='space-y-1'>
               {/* Product name */}
-              <h3 className='font-semibold text-sm leading-tight text-gray-900 overflow-hidden'>
-                <span className='block overflow-hidden text-ellipsis whitespace-nowrap'>
+              <h3 className='text-sm leading-tight overflow-hidden h-8 flex items-start'>
+                <span className='block overflow-hidden line-clamp-2'>
                   {device.product.name}
                 </span>
               </h3>
 
               {/* Short names */}
               {shortNamesText && (
-                <p className='text-xs text-gray-600 overflow-hidden text-ellipsis whitespace-nowrap'>
+                <p className='text-xs text-text-03 overflow-hidden text-ellipsis whitespace-nowrap'>
                   {shortNamesText}
                 </p>
               )}
             </div>
           </div>
-        </Link>
-      </CardBody>
-    </Card>
+        </CardBody>
+      </Card>
+    </Link>
   )
 }
 
@@ -68,9 +71,9 @@ export function DevicesGrid({ devices, isLoading }: DevicesGridProps) {
   if (isLoading) {
     return (
       <div className='p-6'>
-        <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4'>
+        <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 gap-4'>
           {Array.from({ length: 12 }).map((_, i) => (
-            <Card key={i} className='animate-pulse'>
+            <Card key={i} className='animate-pulse' shadow='none'>
               <CardBody className='p-0'>
                 <div className='aspect-square bg-gray-200 rounded-t-lg' />
                 <div className='p-4 space-y-2'>
