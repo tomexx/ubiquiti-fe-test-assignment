@@ -19,7 +19,8 @@ export function BackButton({
     >
       <Button
         variant='light'
-        className='text-gray-600 hover:text-gray-900'
+        size='sm'
+        className='bg-white shadow-sm text-text-03 hover:text-text-03 hover:shadow-md transition-shadow'
         startContent={
           <svg
             className='w-4 h-4'
