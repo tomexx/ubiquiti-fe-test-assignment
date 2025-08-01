@@ -13,9 +13,14 @@ A frontend productivity tool for Ubiquiti developers, designers, PMs, and other 
 - **State & Data**: TanStack Query, TanStack Router
 - **Package Manager**: pnpm
 
+## Backend
+
+- [https://static.ui.com/fingerprint/ui/public.json](https://static.ui.com/fingerprint/ui/public.json)
+- Due to a CORS issue, the app uses this backend via a backend proxy like this [https://ubiquiti-fe-test-assignment.vercel.app/api/fingerprint/ui/public.json](https://ubiquiti-fe-test-assignment.vercel.app/api/fingerprint/ui/public.json)
+
 ## Features
 
-- **Performance Optimized**: TanStack Virtual for efficient rendering of large device lists
+- **Performance Optimized**: TanStack Virtual for efficient rendering of large device table
 - **Responsive Design**: Mobile-first approach with adaptive layouts for all screen sizes
 - **Smart Image Loading**: Lazy loading with progressive enhancement and fallback handling
 - **Advanced Search & Filtering**: Real-time search with multiple filter options (line, category, etc.)
@@ -44,7 +49,7 @@ A frontend productivity tool for Ubiquiti developers, designers, PMs, and other 
 
 ## Development Standards
 
-For comprehensive coding standards and best practices, refer to the `.cursorrules` file. Keep this file up to date to maintain a single source of truth for development guidelines.
+For comprehensive coding standards and best practices, refer to the `.cursorrules` file. Keep this file up to date to maintain a single source of truth for (AI assisted) development guidelines.
 
 ## Things to Improve
 
