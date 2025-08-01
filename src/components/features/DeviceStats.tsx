@@ -15,10 +15,10 @@ export function DeviceStats({
 }: DeviceStatsProps) {
   const getStatsText = () => {
     if (isFilterActive && searchTerm) {
-      return `${filteredDevices} of ${productLineFilteredDevices} devices (${totalDevices} total)`
+      return `${filteredDevices} of ${productLineFilteredDevices} devices filtered (${totalDevices} total)`
     }
     if (isFilterActive) {
-      return `${productLineFilteredDevices} of ${totalDevices} devices`
+      return `${productLineFilteredDevices} of ${totalDevices} devices filtered`
     }
     if (searchTerm) {
       return `${filteredDevices} of ${totalDevices} devices`
