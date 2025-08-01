@@ -1,3 +1,6 @@
+import { ApiError, NetworkError } from '@/api/types/errors'
+import { ERROR_MESSAGES } from '@/config'
+
 class ApiClient {
   private static instance: ApiClient
 
@@ -12,9 +15,19 @@ class ApiClient {
 
   private async handleResponse<T>(response: Response): Promise<T> {
     if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`)
+      const message = ERROR_MESSAGES.HTTP_ERROR(response.status)
+      throw new ApiError(response.status, message, response)
     }
-    return (await response.json()) as T
+
+    try {
+      return (await response.json()) as T
+    } catch (error) {
+      throw new ApiError(
+        response.status,
+        'Failed to parse response as JSON',
+        response
+      )
+    }
   }
 
   private async fetchWithConfig<T>(
@@ -30,9 +43,20 @@ class ApiClient {
       ...(body && { body: JSON.stringify(body) }),
     }
 
-    const response = await fetch(url, config)
+    try {
+      const response = await fetch(url, config)
+      return this.handleResponse<T>(response)
+    } catch (error) {
+      if (error instanceof ApiError) {
+        throw error
+      }
 
-    return this.handleResponse<T>(response)
+      // Network or other fetch errors
+      throw new NetworkError(
+        'Network request failed',
+        error instanceof Error ? error : undefined
+      )
+    }
   }
 
   public get<T>(url: string): Promise<T> {

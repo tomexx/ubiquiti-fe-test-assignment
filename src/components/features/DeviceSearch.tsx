@@ -1,10 +1,9 @@
 import { Device } from '@/api/types/device'
 import { ClearIcon, SearchIcon } from '@/components/icons'
+import { UI_CONSTANTS } from '@/config'
 import { generateId } from '@/utils'
 import { Input } from '@heroui/react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-
-const INITIAL_SUGGESTIONS_LIMIT = 10
 
 interface SearchSuggestion extends Device {
   highlightedName: string
@@ -63,7 +62,7 @@ export function DeviceSearch({
 
     const limit = showAllSuggestions
       ? allMatchingDevices.length
-      : INITIAL_SUGGESTIONS_LIMIT
+      : UI_CONSTANTS.SEARCH.INITIAL_SUGGESTIONS_LIMIT
     const suggestions = allMatchingDevices.slice(0, limit).map(device => ({
       ...device,
       highlightedName: highlightMatch(device.product.name, searchTerm),
@@ -76,10 +75,12 @@ export function DeviceSearch({
   const remainingResultsCount = useMemo(() => {
     if (
       showAllSuggestions ||
-      allMatchingDevices.length <= INITIAL_SUGGESTIONS_LIMIT
+      allMatchingDevices.length <= UI_CONSTANTS.SEARCH.INITIAL_SUGGESTIONS_LIMIT
     )
       return 0
-    return allMatchingDevices.length - INITIAL_SUGGESTIONS_LIMIT
+    return (
+      allMatchingDevices.length - UI_CONSTANTS.SEARCH.INITIAL_SUGGESTIONS_LIMIT
+    )
   }, [allMatchingDevices.length, showAllSuggestions])
 
   const handleSearchChange = (value: string) => {

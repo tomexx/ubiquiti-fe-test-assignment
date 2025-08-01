@@ -1,6 +1,7 @@
 import { Device } from '@/api/types/device'
 import { ProductImage } from '@/components/common'
 import { Spinner } from '@heroui/react'
+import { UI_CONSTANTS } from '@/config'
 import { useNavigate } from '@tanstack/react-router'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import { useRef } from 'react'
@@ -18,13 +19,13 @@ export function DevicesTable({
   const parentRef = useRef<HTMLDivElement>(null)
 
   // Estimated row height - matching original HeroUI table row height
-  const ESTIMATED_ROW_HEIGHT = 48
+  const ESTIMATED_ROW_HEIGHT = UI_CONSTANTS.VIRTUAL_SCROLL.ESTIMATED_ROW_HEIGHT
 
   const virtualizer = useVirtualizer({
     count: devices.length,
     getScrollElement: () => parentRef.current,
     estimateSize: () => ESTIMATED_ROW_HEIGHT,
-    overscan: 5, // Render 5 extra items outside the visible area
+    overscan: UI_CONSTANTS.VIRTUAL_SCROLL.OVERSCAN, // Render extra items outside the visible area
   })
 
   if (isLoading) {
@@ -110,7 +111,7 @@ export function DevicesTable({
                         <ProductImage
                           productId={device.id}
                           imageId={device.images.default}
-                          size={32}
+                          size={UI_CONSTANTS.IMAGE_SIZES.THUMBNAIL}
                           alt={`${device.line.name} product line image`}
                         />
                       </div>

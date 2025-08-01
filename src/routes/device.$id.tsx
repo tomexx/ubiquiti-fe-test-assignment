@@ -2,6 +2,7 @@ import { useDevice } from '@/api/queries/devices'
 import { ProductImage } from '@/components/common'
 import { DeviceDetails } from '@/components/features'
 import { BackButton, ContextualHeader } from '@/components/layout'
+import { ERROR_MESSAGES, SUCCESS_MESSAGES, UI_CONSTANTS } from '@/config'
 import {
   Button,
   Link,
@@ -31,13 +32,13 @@ function DeviceDetail() {
     try {
       await navigator.clipboard.writeText(JSON.stringify(device, null, 2))
       addToast({
-        title: 'JSON copied to clipboard',
+        title: SUCCESS_MESSAGES.CLIPBOARD_COPIED,
         color: 'success',
       })
     } catch (err) {
       console.error('Failed to copy to clipboard:', err)
       addToast({
-        title: 'Failed to copy to clipboard',
+        title: ERROR_MESSAGES.CLIPBOARD_COPY_FAILED,
         color: 'danger',
       })
     }
@@ -69,7 +70,7 @@ function DeviceDetail() {
                 <ProductImage
                   productId={device.id}
                   imageId={device.images.default}
-                  size={300}
+                  size={UI_CONSTANTS.IMAGE_SIZES.LARGE}
                   alt={device.product.name}
                   className='w-[300px] h-[300px] object-cover'
                 />

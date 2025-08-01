@@ -1,4 +1,5 @@
 import { LazyImage } from '@/components/ui'
+import { API_CONSTANTS } from '@/config'
 
 interface ProductImageProps {
   productId: string
@@ -11,11 +12,10 @@ interface ProductImageProps {
 }
 
 const buildImageUrl = (id: string, imageHash: string, width: number) => {
-  const baseUrl = 'https://static.ui.com/fingerprint/ui/images'
-  const imagePath = `${baseUrl}/${id}/default/${imageHash}.png`
+  const imagePath = `${API_CONSTANTS.BASE_URLS.STATIC}/${id}/default/${imageHash}.png`
   const encodedImagePath = encodeURIComponent(imagePath)
 
-  return `https://images.svc.ui.com/?u=${encodedImagePath}&w=${width}&q=75`
+  return `${API_CONSTANTS.BASE_URLS.IMAGE_SERVICE}?u=${encodedImagePath}&w=${width}&q=75`
 }
 
 export function ProductImage({

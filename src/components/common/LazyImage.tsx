@@ -1,4 +1,4 @@
-import { UI_CONSTANTS } from '@/constants'
+import { UI_CONSTANTS } from '@/config'
 import { Image } from '@heroui/react'
 import { useEffect, useRef, useState } from 'react'
 

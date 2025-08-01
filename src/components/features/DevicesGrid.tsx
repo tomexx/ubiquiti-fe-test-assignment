@@ -1,5 +1,6 @@
 import type { Device } from '@/api/types/device'
 import { ProductImage } from '@/components/common'
+import { UI_CONSTANTS } from '@/config'
 import { Card, CardBody } from '@heroui/react'
 import { Link } from '@tanstack/react-router'
 
@@ -32,7 +33,7 @@ function DeviceGridItem({ device }: DeviceGridItemProps) {
             <ProductImage
               productId={device.id}
               imageId={device.images.default}
-              size={85}
+              size={UI_CONSTANTS.IMAGE_SIZES.SMALL}
               alt={device.product.name}
               className='w-full h-full object-contain'
             />
