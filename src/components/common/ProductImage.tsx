@@ -1,4 +1,4 @@
-import { LazyImage } from '@/components/ui'
+import { LazyImage } from '@/components/common'
 import { API_CONSTANTS } from '@/config'
 
 interface ProductImageProps {
