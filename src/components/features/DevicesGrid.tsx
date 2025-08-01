@@ -38,7 +38,7 @@ function DeviceGridItem({ device }: DeviceGridItemProps) {
             />
 
             {/* Product line overlay */}
-            <div className='absolute top-[3px] right-[3px] bg-white text-ublue-06 text-xs px-2 py-1 rounded-md'>
+            <div className='absolute top-[3px] right-[3px] bg-white text-ublue-06 text-xs px-2 py-1 rounded-md z-10'>
               {device.line.name}
             </div>
           </div>
