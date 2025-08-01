@@ -45,7 +45,7 @@ export function DeviceFilters({
       <DropdownMenu
         aria-label='Product line filter'
         closeOnSelect={false}
-        className='max-h-[60vh] overflow-y-auto'
+        className='max-h-[60vh] overflow-y-auto p-1'
         items={[
           { key: 'label', name: 'Product Lines' },
           ...productLines.map(line => ({ key: line, name: line })),
@@ -96,19 +96,26 @@ export function DeviceFilters({
           return (
             <DropdownItem
               key={item.key}
-              className='p-0 py-0.5 [&[data-hover=true]]:bg-transparent '
+              className='p-0 py-0.5 [&[data-hover=true]]:bg-transparent focus:outline-none focus-visible:outline-none [&[data-focus-visible=true]]:ring-2 [&[data-focus-visible=true]]:ring-ublue-06 [&[data-focus-visible=true]]:ring-offset-1'
               textValue={item.name}
+              onAction={() => {
+                const isCurrentlySelected = selectedProductLines.includes(
+                  item.name
+                )
+                onProductLineChange(item.name, !isCurrentlySelected)
+              }}
             >
               <Checkbox
                 size='sm'
                 isSelected={selectedProductLines.includes(item.name)}
-                onValueChange={isSelected =>
-                  onProductLineChange(item.name, isSelected)
-                }
-                className='w-full p-1.5 text-sm'
+                className='w-full p-1.5 text-sm pointer-events-none [&_*]:focus:outline-none [&_*]:focus:ring-0 [&_*]:focus-visible:outline-none'
                 classNames={{
                   label: 'text-neutral-10',
+                  wrapper:
+                    '!outline-none !ring-0 focus:!outline-none focus:!ring-0 focus-visible:!outline-none',
+                  base: '!outline-none focus:!outline-none focus-visible:!outline-none',
                 }}
+                tabIndex={-1}
               >
                 {item.name}
               </Checkbox>

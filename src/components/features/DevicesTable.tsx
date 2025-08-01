@@ -64,6 +64,7 @@ export function DevicesTable({
         className='h-full overflow-auto'
         style={{
           height: 'calc(100% - 40px)', // Account for header height
+          padding: '4px', // Add padding to prevent focus outline clipping
         }}
       >
         <div
@@ -71,6 +72,7 @@ export function DevicesTable({
             height: `${virtualizer.getTotalSize()}px`,
             width: '100%',
             position: 'relative',
+            padding: '4px', // Add padding for focus outline space
           }}
         >
           {virtualItems.map(virtualItem => {
@@ -90,7 +92,7 @@ export function DevicesTable({
                 }}
               >
                 <div
-                  className='flex items-center cursor-pointer hover:bg-neutral-01 transition-colors border-b border-neutral-03 h-full'
+                  className='flex items-center cursor-pointer hover:bg-neutral-01 transition-colors border-b border-neutral-03 h-full focus:outline-none focus-visible:outline-none focus:ring-2 focus:ring-ublue-06 focus:ring-offset-2 focus-visible:ring-2 focus-visible:ring-ublue-06 focus-visible:ring-offset-2'
                   onClick={() => handleRowAction(device.id)}
                   role='row'
                   tabIndex={0}
