@@ -257,7 +257,7 @@ export function DeviceSearch({
             <button
               type='button'
               onClick={handleClearSearch}
-              className='p-1 text-neutral-08 cursor-pointer'
+              className='p-1 text-neutral-08 cursor-pointer focus:outline-none focus-visible:outline-none focus:ring-2 focus:ring-ublue-06 focus:ring-offset-1 focus-visible:ring-2 focus-visible:ring-ublue-06 focus-visible:ring-offset-1 rounded'
               aria-label='Clear search'
             >
               <ClearIcon className='w-4 h-4 text-neutral-08' />

@@ -30,7 +30,7 @@ const Header = () => {
             href='https://listiak.dev'
             target='_blank'
             rel='noopener noreferrer'
-            className='mr-8 underline'
+            className='mr-8 underline focus:outline-none focus-visible:outline-none focus:ring-2 focus:ring-ublue-06 focus:ring-offset-2 focus-visible:ring-2 focus-visible:ring-ublue-06 focus-visible:ring-offset-2'
           >
             Tomas Listiak
           </a>

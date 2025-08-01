@@ -70,17 +70,15 @@ export function DeviceFilters({
             return (
               <DropdownItem
                 key='reset'
-                className='p-0 py-2 pt-3 [&[data-hover=true]]:bg-transparent'
+                className='p-0 py-2 pt-3 [&[data-hover=true]]:bg-transparent focus:outline-none focus-visible:outline-none [&[data-focus-visible=true]]:ring-2 [&[data-focus-visible=true]]:ring-ublue-06 [&[data-focus-visible=true]]:ring-offset-1'
                 textValue='Reset'
+                onAction={() => {
+                  if (isFilterActive) {
+                    onResetFilters()
+                  }
+                }}
               >
-                <a
-                  href='#'
-                  onClick={e => {
-                    e.preventDefault()
-                    if (isFilterActive) {
-                      onResetFilters()
-                    }
-                  }}
+                <span
                   className={`text-left text-sm ${
                     isFilterActive
                       ? 'text-destructive cursor-pointer'
@@ -88,7 +86,7 @@ export function DeviceFilters({
                   }`}
                 >
                   Reset
-                </a>
+                </span>
               </DropdownItem>
             )
           }
