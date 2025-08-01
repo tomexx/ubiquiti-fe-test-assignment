@@ -1,3 +1,4 @@
+import { UI_CONSTANTS } from '@/constants'
 import { Image } from '@heroui/react'
 import { useEffect, useRef, useState } from 'react'
 
@@ -33,8 +34,8 @@ export function LazyImage({
         }
       },
       {
-        rootMargin: '50px', // Start loading 50px before the image comes into view
-        threshold: 0.1,
+        rootMargin: UI_CONSTANTS.SEARCH.INTERSECTION_ROOT_MARGIN, // Start loading before the image comes into view
+        threshold: UI_CONSTANTS.SEARCH.INTERSECTION_THRESHOLD,
       }
     )
 
@@ -76,7 +77,9 @@ export function LazyImage({
           height={height}
           className={`${className} ${
             hasLoaded ? 'opacity-100' : 'opacity-0'
-          } transition-opacity duration-200`}
+          } transition-opacity duration-${
+            UI_CONSTANTS.ANIMATION.FADE_DURATION
+          }`}
           fallbackSrc={fallbackSrc}
           onLoad={handleLoad}
           onError={handleError}
