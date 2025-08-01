@@ -1,5 +1,5 @@
 import type { Device } from '@/api/types/device'
-import { LoadingState, ProductImage } from '@/components/common'
+import { EmptyState, LoadingState, ProductImage } from '@/components/common'
 import { UI_CONSTANTS } from '@/config'
 import { useNavigate } from '@tanstack/react-router'
 import { useVirtualizer } from '@tanstack/react-virtual'
@@ -29,6 +29,10 @@ export function DevicesTable({
 
   if (isLoading) {
     return <LoadingState />
+  }
+
+  if (!devices.length) {
+    return <EmptyState message='No devices found' />
   }
 
   const handleRowAction = (deviceId: string) => {

@@ -22,6 +22,7 @@ export function DeviceSearch({
   onSearchChange,
   className = '',
 }: DeviceSearchProps) {
+  const [inputValue, setInputValue] = useState(searchTerm)
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1)
   const [showAllSuggestions, setShowAllSuggestions] = useState(false)
@@ -32,6 +33,11 @@ export function DeviceSearch({
   // Generate unique IDs for accessibility
   const searchId = useMemo(() => generateId('search'), [])
   const listboxId = useMemo(() => generateId('listbox'), [])
+
+  // Sync input value when searchTerm prop changes (e.g., from URL or external reset)
+  useEffect(() => {
+    setInputValue(searchTerm)
+  }, [searchTerm])
 
   // Helper function to highlight matching text
   const highlightMatch = useCallback((text: string, searchTerm: string) => {
@@ -47,14 +53,14 @@ export function DeviceSearch({
     )
   }, [])
 
-  // Get all matching devices for search suggestions
+  // Get all matching devices for search suggestions (using inputValue for real-time suggestions)
   const allMatchingDevices = useMemo(() => {
-    if (!devices || !searchTerm.trim()) return []
+    if (!devices || !inputValue.trim()) return []
 
     return devices.filter(device =>
-      device.product.name.toLowerCase().includes(searchTerm.toLowerCase())
+      device.product.name.toLowerCase().includes(inputValue.toLowerCase())
     )
-  }, [devices, searchTerm])
+  }, [devices, inputValue])
 
   // Get search suggestions from devices (limited or all based on showAllSuggestions)
   const searchSuggestions = useMemo((): SearchSuggestion[] => {
@@ -65,11 +71,11 @@ export function DeviceSearch({
       : UI_CONSTANTS.SEARCH.INITIAL_SUGGESTIONS_LIMIT
     const suggestions = allMatchingDevices.slice(0, limit).map(device => ({
       ...device,
-      highlightedName: highlightMatch(device.product.name, searchTerm),
+      highlightedName: highlightMatch(device.product.name, inputValue),
     }))
 
     return suggestions
-  }, [allMatchingDevices, showAllSuggestions, highlightMatch, searchTerm])
+  }, [allMatchingDevices, showAllSuggestions, highlightMatch, inputValue])
 
   // Calculate remaining results count
   const remainingResultsCount = useMemo(() => {
@@ -83,14 +89,22 @@ export function DeviceSearch({
     )
   }, [allMatchingDevices.length, showAllSuggestions])
 
-  const handleSearchChange = (value: string) => {
-    onSearchChange(value)
+  const handleInputChange = (value: string) => {
+    setInputValue(value)
     setShowSuggestions(value.trim().length > 0)
     setSelectedSuggestionIndex(-1)
-    setShowAllSuggestions(false) // Reset expanded state when search changes
+    setShowAllSuggestions(false) // Reset expanded state when input changes
+  }
+
+  const handleSubmitSearch = (value: string) => {
+    onSearchChange(value)
+    setShowSuggestions(false)
+    setSelectedSuggestionIndex(-1)
+    setShowAllSuggestions(false)
   }
 
   const handleClearSearch = () => {
+    setInputValue('')
     onSearchChange('')
     setShowSuggestions(false)
     setSelectedSuggestionIndex(-1)
@@ -99,10 +113,9 @@ export function DeviceSearch({
   }
 
   const handleSuggestionClick = (suggestion: SearchSuggestion) => {
-    onSearchChange(suggestion.product.name)
-    setShowSuggestions(false)
-    setSelectedSuggestionIndex(-1)
-    setShowAllSuggestions(false)
+    const selectedValue = suggestion.product.name
+    setInputValue(selectedValue)
+    handleSubmitSearch(selectedValue)
   }
 
   const handleLoadMoreResults = () => {
@@ -111,6 +124,35 @@ export function DeviceSearch({
   }
 
   const handleSearchKeyDown = (e: React.KeyboardEvent) => {
+    // Always handle Enter key, even when there are no suggestions
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      if (
+        showSuggestions &&
+        searchSuggestions.length > 0 &&
+        selectedSuggestionIndex >= 0
+      ) {
+        const loadMoreButtonIndex = searchSuggestions.length
+        if (
+          selectedSuggestionIndex === loadMoreButtonIndex &&
+          remainingResultsCount > 0
+        ) {
+          // Trigger load more action
+          handleLoadMoreResults()
+        } else {
+          const selectedSuggestion = searchSuggestions[selectedSuggestionIndex]
+          if (selectedSuggestion) {
+            handleSuggestionClick(selectedSuggestion)
+          }
+        }
+      } else {
+        // No suggestion selected or no suggestions available, submit the current input value
+        handleSubmitSearch(inputValue)
+      }
+      return
+    }
+
+    // For other keys, only process if we have suggestions
     if (!showSuggestions || searchSuggestions.length === 0) return
 
     // Total navigable items: suggestions + load more button (if present)
@@ -166,24 +208,7 @@ export function DeviceSearch({
           return newIndex
         })
         break
-      case 'Enter':
-        e.preventDefault()
-        if (selectedSuggestionIndex >= 0) {
-          if (
-            selectedSuggestionIndex === loadMoreButtonIndex &&
-            remainingResultsCount > 0
-          ) {
-            // Trigger load more action
-            handleLoadMoreResults()
-          } else {
-            const selectedSuggestion =
-              searchSuggestions[selectedSuggestionIndex]
-            if (selectedSuggestion) {
-              handleSuggestionClick(selectedSuggestion)
-            }
-          }
-        }
-        break
+
       case 'Escape':
         setShowSuggestions(false)
         setSelectedSuggestionIndex(-1)
@@ -235,10 +260,10 @@ export function DeviceSearch({
         ref={searchInputRef}
         id={searchId}
         placeholder='Search'
-        value={searchTerm}
-        onValueChange={handleSearchChange}
+        value={inputValue}
+        onValueChange={handleInputChange}
         onKeyDown={handleSearchKeyDown}
-        onFocus={() => setShowSuggestions(searchTerm.trim().length > 0)}
+        onFocus={() => setShowSuggestions(inputValue.trim().length > 0)}
         className='w-full'
         size='sm'
         role='combobox'
@@ -254,7 +279,7 @@ export function DeviceSearch({
           <SearchIcon className='w-[20px] h-[20px] text-neutral-08' />
         }
         endContent={
-          searchTerm.trim() && (
+          inputValue.trim() && (
             <button
               type='button'
               onClick={handleClearSearch}
