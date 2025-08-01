@@ -1,4 +1,4 @@
-import { Device } from '@/api/types/device'
+import type { Device } from '@/api/types/device'
 import { ClearIcon, SearchIcon } from '@/components/icons'
 import { UI_CONSTANTS } from '@/config'
 import { generateId } from '@/utils'

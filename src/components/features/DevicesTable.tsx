@@ -1,6 +1,5 @@
-import { Device } from '@/api/types/device'
-import { ProductImage } from '@/components/common'
-import { Spinner } from '@heroui/react'
+import type { Device } from '@/api/types/device'
+import { LoadingState, ProductImage } from '@/components/common'
 import { UI_CONSTANTS } from '@/config'
 import { useNavigate } from '@tanstack/react-router'
 import { useVirtualizer } from '@tanstack/react-virtual'
@@ -29,11 +28,7 @@ export function DevicesTable({
   })
 
   if (isLoading) {
-    return (
-      <div className='flex justify-center items-center h-64'>
-        <Spinner size='lg' />
-      </div>
-    )
+    return <LoadingState />
   }
 
   const handleRowAction = (deviceId: string) => {

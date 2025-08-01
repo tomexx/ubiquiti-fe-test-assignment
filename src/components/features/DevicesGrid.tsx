@@ -1,8 +1,9 @@
 import type { Device } from '@/api/types/device'
-import { ProductImage } from '@/components/common'
+import { EmptyState, LoadingState, ProductImage } from '@/components/common'
 import { UI_CONSTANTS } from '@/config'
 import { Card, CardBody } from '@heroui/react'
 import { Link } from '@tanstack/react-router'
+import { memo } from 'react'
 
 interface DevicesGridProps {
   devices: Device[]
@@ -13,7 +14,9 @@ interface DeviceGridItemProps {
   device: Device
 }
 
-function DeviceGridItem({ device }: DeviceGridItemProps) {
+const DeviceGridItem = memo(function DeviceGridItem({
+  device,
+}: DeviceGridItemProps) {
   const shortNamesText =
     device.shortnames?.length > 0 ? device.shortnames.join(', ') : ''
 
@@ -66,35 +69,18 @@ function DeviceGridItem({ device }: DeviceGridItemProps) {
       </Card>
     </Link>
   )
-}
+})
 
-export function DevicesGrid({ devices, isLoading }: DevicesGridProps) {
+export const DevicesGrid = memo(function DevicesGrid({
+  devices,
+  isLoading,
+}: DevicesGridProps) {
   if (isLoading) {
-    return (
-      <div className='p-6'>
-        <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 gap-4'>
-          {Array.from({ length: 12 }).map((_, i) => (
-            <Card key={i} className='animate-pulse' shadow='none'>
-              <CardBody className='p-0'>
-                <div className='aspect-square bg-gray-200 rounded-t-lg' />
-                <div className='p-4 space-y-2'>
-                  <div className='h-4 bg-gray-200 rounded' />
-                  <div className='h-3 bg-gray-200 rounded w-3/4' />
-                </div>
-              </CardBody>
-            </Card>
-          ))}
-        </div>
-      </div>
-    )
+    return <LoadingState variant='grid-skeleton' />
   }
 
   if (!devices.length) {
-    return (
-      <div className='flex justify-center items-center h-64 text-gray-500'>
-        <p>No devices found</p>
-      </div>
-    )
+    return <EmptyState message='No devices found' />
   }
 
   return (
@@ -106,4 +92,4 @@ export function DevicesGrid({ devices, isLoading }: DevicesGridProps) {
       </div>
     </div>
   )
-}
+})

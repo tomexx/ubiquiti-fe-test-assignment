@@ -1,4 +1,5 @@
 import { useDevices } from '@/api/queries/devices'
+import { EmptyState, LoadingState } from '@/components/common'
 import { DeviceFilters } from '@/components/features/DeviceFilters'
 import { DeviceSearch } from '@/components/features/DeviceSearch'
 import { DeviceStats } from '@/components/features/DeviceStats'
@@ -7,7 +8,6 @@ import { DevicesTable } from '@/components/features/DevicesTable'
 import { ViewMode, ViewToggle } from '@/components/features/ViewToggle'
 import { ContextualHeader } from '@/components/layout'
 import { useDeviceFilters } from '@/hooks/useDeviceFilters'
-import { Spinner } from '@heroui/react'
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 
@@ -58,11 +58,7 @@ export function Index() {
   })
 
   if (isLoading) {
-    return (
-      <div className='flex justify-center items-center h-64'>
-        <Spinner size='lg' />
-      </div>
-    )
+    return <LoadingState />
   }
 
   if (error) {
@@ -74,11 +70,7 @@ export function Index() {
   }
 
   if (!data?.devices?.length) {
-    return (
-      <div className='flex justify-center items-center h-64 text-gray-500'>
-        <p>No devices found</p>
-      </div>
-    )
+    return <EmptyState message='No devices found' />
   }
 
   const leftContent = (

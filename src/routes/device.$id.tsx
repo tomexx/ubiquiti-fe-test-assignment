@@ -1,5 +1,5 @@
 import { useDevice } from '@/api/queries/devices'
-import { ProductImage } from '@/components/common'
+import { LoadingState, ProductImage } from '@/components/common'
 import { DeviceDetails } from '@/components/features'
 import { BackButton, ContextualHeader } from '@/components/layout'
 import { ERROR_MESSAGES, SUCCESS_MESSAGES, UI_CONSTANTS } from '@/config'
@@ -11,7 +11,6 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
-  Spinner,
   addToast,
   useDisclosure,
 } from '@heroui/react'
@@ -47,11 +46,7 @@ function DeviceDetail() {
   return (
     <>
       <ContextualHeader leftContent={<BackButton />} />
-      {isLoading && (
-        <div className='flex justify-center items-center h-64'>
-          <Spinner size='lg' />
-        </div>
-      )}
+      {isLoading && <LoadingState />}
       {error && (
         <div className='flex justify-center items-center h-64 text-red-500'>
           <p>Failed to load device: {error.message}</p>
