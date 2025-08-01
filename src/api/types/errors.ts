@@ -10,7 +10,7 @@ export class ApiError extends Error {
 }
 
 export class NetworkError extends Error {
-  constructor(message: string, public cause?: Error) {
+  constructor(message: string, public override cause?: Error) {
     super(message)
     this.name = 'NetworkError'
   }
