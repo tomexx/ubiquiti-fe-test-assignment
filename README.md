@@ -13,6 +13,21 @@ A frontend productivity tool for Ubiquiti developers, designers, PMs, and other 
 - **State & Data**: TanStack Query, TanStack Router
 - **Package Manager**: pnpm
 
+## Features
+
+- **Performance Optimized**: TanStack Virtual for efficient rendering of large device lists
+- **Responsive Design**: Mobile-first approach with adaptive layouts for all screen sizes
+- **Smart Image Loading**: Lazy loading with progressive enhancement and fallback handling
+- **Advanced Search & Filtering**: Real-time search with multiple filter options (line, category, etc.)
+- **Multiple View Modes**: Switch between grid and table views for optimal data presentation
+- **Consistent UI**: HeroUI component library with Tailwind CSS for design system consistency
+- **Efficient State Management**: TanStack Query for server state with caching and background updates
+- **Type-Safe Routing**: TanStack Router with full TypeScript integration
+- **Accessibility First**: WCAG compliant with keyboard navigation and screen reader support
+- **Scalable Architecture**: Feature-based structure ready for future enhancements
+- **Developer Experience**: ESLint, Prettier, and TypeScript strict mode for code quality
+- **Modern React Architecture**: Built with React 19, TypeScript, and latest best practices
+
 ## Getting Started
 
 1. Install dependencies:
