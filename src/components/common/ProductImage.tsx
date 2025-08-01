@@ -8,7 +8,6 @@ interface ProductImageProps {
   alt: string
   className?: string
   placeholder?: React.ReactNode
-  fallbackSrc?: string
 }
 
 const buildImageUrl = (id: string, imageHash: string, width: number) => {
@@ -25,7 +24,6 @@ export function ProductImage({
   alt,
   className,
   placeholder,
-  fallbackSrc,
 }: ProductImageProps) {
   const imageUrl = buildImageUrl(productId, imageId, size)
 
@@ -36,7 +34,6 @@ export function ProductImage({
     height: size,
     ...(className && { className }),
     ...(placeholder && { placeholder }),
-    ...(fallbackSrc && { fallbackSrc }),
   }
 
   return <LazyImage {...lazyImageProps} />

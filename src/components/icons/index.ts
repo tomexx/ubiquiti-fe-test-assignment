@@ -7,6 +7,7 @@ export { LogoIcon } from './LogoIcon'
 
 // Feature Icons
 export { ClearIcon } from './ClearIcon'
+export { EmptyImageIcon } from './EmptyImageIcon'
 export { GridIcon } from './GridIcon'
 export { SearchIcon } from './SearchIcon'
 export { TableIcon } from './TableIcon'
